@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entrepreneurial Dreams</title>
+  <meta name="description" content="Animated scroll demo of the Economist Impact × Meta infographic on young entrepreneurship amidst global crisis.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;700&family=Source+Sans+3:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <!-- Hide split headings until their line masks are built (fallback reveals them if scripts fail) -->
+  <script>
+    document.documentElement.classList.add("js");
+    setTimeout(() => document.documentElement.classList.remove("js"), 4000);
+  </script>
+  <style>html.js .split { visibility: hidden; }</style>
+</head>
+<body>
+<div class="progress" aria-hidden="true"><span></span></div>
+
+<!--
+  Layout: every positioned element carries desktop coordinates (--x --y --w --hh --fs, 1920-wide design)
+  and mobile coordinates (--mx --my --mw --mhh --mfs, 360-wide design). .desk / .mob show one layout only.
+-->
+<div class="page">
+  <header class="nav">
+    <img src="assets/nav-logo.svg" alt="Economist Impact">
+  </header>
+
+  <!-- ================= S1 · Masthead, map, intro ================= -->
+  <section class="sec" id="s1" style="--h:2010;--mh:1232">
+    <div class="abs people-bg" style="--x:843;--y:1117;--w:970;--hh:970;--mx:10;--my:804;--mw:340;--mhh:427.8" aria-hidden="true">
+      <img src="assets/people-concentric.png" alt="">
+    </div>
+
+    <!-- Hero text shares the 192 left line with the logo and the 3000 lockup (x values offset each glyph's side bearing so the ink lines up); the map graphic ignores the gutter -->
+    <h1 class="abs display s1-title split" style="--x:178.9;--y:60;--w:1000;--fs:140;--mx:10;--my:32;--mw:254;--mfs:36">Entrepreneurial dreams</h1>
+    <p class="abs display s1-amidst split" style="--x:1188;--y:64;--w:300;--fs:89.8;--mx:273;--my:33.1;--mw:80;--mfs:23.1">amidst<br>global<br>crisis</p>
+    <p class="abs display s1-sub split" style="--x:190.4;--y:332;--fs:46;--mx:12;--my:114;--mfs:17">What can the role of the private sector be?</p>
+    <div class="abs s1-meta" style="--x:1428;--y:349;--w:300;--mx:12;--my:142;--mw:336">
+      <span>Supported by</span>
+      <img src="assets/meta-logo.png" alt="Meta">
+    </div>
+
+    <!-- Map group: anchored to the right edge, drawn at 72% of the original scale (24.5% on mobile) -->
+    <div class="abs mapgroup" style="--x:523;--y:410;--w:2024;--hh:838.74;--mx:-68.48;--my:241;--mw:2024;--mhh:838.74">
+      <div class="abs map" style="--x:0;--y:0;--w:2024;--hh:838.74;--mx:0;--my:0;--mw:2024;--mhh:838.74" aria-hidden="true">
+        <!-- The map's three circles as separate windows onto the same artwork, so they can split apart -->
+        <div class="globe g1"><img src="assets/map.svg" alt=""></div>
+        <div class="globe g2"><img src="assets/map.svg" alt=""></div>
+        <div class="globe g3"><img src="assets/map.svg" alt=""></div>
+      </div>
+      <div class="abs leader desk" data-leader="h" style="--x:191;--y:372;--w:208.5;--hh:464"><img src="assets/line-us.svg" alt=""></div>
+      <div class="abs leader desk" data-leader="h" style="--x:506;--y:610;--w:90.5;--hh:324"><img src="assets/line-brazil.svg" alt=""></div>
+      <div class="abs leader desk" data-leader="h" style="--x:819;--y:265;--w:103.5;--hh:570"><img src="assets/line-germany.svg" alt=""></div>
+      <div class="abs leader desk" data-leader="h" style="--x:1133;--y:481;--w:115.5;--hh:455.5"><img src="assets/line-india.svg" alt=""></div>
+      <div class="abs leader desk" data-leader="v" style="--x:1445;--y:716;--w:4;--hh:118"><img src="assets/line-aus.svg" alt=""></div>
+
+      <div class="abs stat-pos desk" style="--x:182;--y:829"><div class="stat"><img src="assets/flag-us.svg" alt=""><dl>
+        <dt class="country">United States</dt>
+        <div class="row"><dt>Population</dt><dd>329,539,102</dd></div>
+        <div class="row"><dt>Youth Unemployment</dt><dd>15%</dd></div>
+        <div class="row"><dt>GDP</dt><dd>$20.94Tn</dd></div>
+      </dl></div></div>
+      <div class="abs stat-pos desk" style="--x:496;--y:929"><div class="stat"><img src="assets/flag-brazil.svg" alt=""><dl>
+        <dt class="country">Brazil</dt>
+        <div class="row"><dt>Population</dt><dd>212,630,000</dd></div>
+        <div class="row"><dt>Youth Unemployment</dt><dd>31%</dd></div>
+        <div class="row"><dt>GDP</dt><dd>$1.445Tn</dd></div>
+      </dl></div></div>
+      <div class="abs stat-pos desk" style="--x:810;--y:829"><div class="stat"><img src="assets/flag-germany.svg" alt=""><dl>
+        <dt class="country">Germany</dt>
+        <div class="row"><dt>Population</dt><dd>83,240,000</dd></div>
+        <div class="row"><dt>Youth Unemployment</dt><dd>7%</dd></div>
+        <div class="row"><dt>GDP</dt><dd>$3.806Tn</dd></div>
+      </dl></div></div>
+      <div class="abs stat-pos desk" style="--x:1124;--y:929"><div class="stat"><img src="assets/flag-india.svg" alt=""><dl>
+        <dt class="country">India</dt>
+        <div class="row"><dt>Population</dt><dd>1,382,639,000</dd></div>
+        <div class="row"><dt>Youth Unemployment</dt><dd>20%</dd></div>
+        <div class="row"><dt>GDP</dt><dd>$1.623Tn</dd></div>
+      </dl></div></div>
+      <div class="abs stat-pos desk" style="--x:1438;--y:829"><div class="stat"><img src="assets/flag-aus.svg" alt=""><dl>
+        <dt class="country">Australia</dt>
+        <div class="row"><dt>Population</dt><dd>25,690,000</dd></div>
+        <div class="row"><dt>Youth Unemployment</dt><dd>14%</dd></div>
+        <div class="row"><dt>GDP</dt><dd>$1.331Tn</dd></div>
+      </dl></div></div>
+    </div>
+
+    <!-- Mobile map pins -->
+    <div class="abs pin mob" style="--mx:32;--my:317"><img src="assets/flag-us.svg" alt=""><span>United States</span></div>
+    <div class="abs pin mob" style="--mx:154;--my:301"><img src="assets/flag-germany.svg" alt=""><span>Germany</span></div>
+    <div class="abs pin mob" style="--mx:231;--my:344"><img src="assets/flag-india.svg" alt=""><span>India</span></div>
+    <div class="abs pin mob" style="--mx:81;--my:393"><img src="assets/flag-brazil.svg" alt=""><span>Brazil</span></div>
+    <div class="abs pin mob" style="--mx:298;--my:398"><img src="assets/flag-aus.svg" alt=""><span>Australia</span></div>
+
+    <div class="abs lockup display" style="--x:186;--y:480;--w:420;--hh:290;--mx:107;--my:170;--mw:150;--mhh:102" aria-label="A survey of 3000 18 to 40 year olds across 5 countries">
+      <p class="abs" style="--x:17.5;--y:0;--fs:27.65;--mx:17.5;--my:0;--mfs:30">A survey of</p>
+      <p class="abs n3000" style="--x:3.2;--y:16.5;--fs:172;--mx:3.2;--my:16.5;--mfs:172" aria-hidden="true"><!-- each digit sits in its own mask; the 3 rolls through 0–3 -->
+        <span class="digit"><span class="reel ticker"><span>0</span><span>1</span><span>2</span><span>3</span></span></span><span class="digit"><span class="reel">0</span></span><span class="digit"><span class="reel">0</span></span><span class="digit"><span class="reel">0</span></span>
+      </p>
+      <div class="abs range" style="--x:0;--y:129.65;--hh:129;--fs:143;--mx:0;--my:129.65;--mhh:129;--mfs:143">
+        <span class="r18">18</span><span class="arrow"><img src="assets/arrow-18-40.svg" alt=""></span><span class="r40">40</span>
+      </div>
+      <p class="abs yo" style="--x:391.4;--y:146.2;--fs:25;--mx:391.4;--my:146.2;--mfs:25">year olds</p>
+      <p class="abs across" style="--x:5.5;--y:257.2;--fs:28;--mx:5.5;--my:257.2;--mfs:34">across 5 countries</p>
+    </div>
+
+    <div class="abs intro reveal" style="--x:192;--y:1330;--w:650;--mx:24;--my:465;--mw:312">
+      <p class="lede">Although young adults have in many ways borne the brunt of covid-19’s economic consequences, the impact of the crisis on their career aspirations is not fully understood.</p>
+      <p class="body">A survey of 3,000+ people aged 18-40 across five countries—Australia, Brazil, Germany, India and the United States identifies the factors driving young people toward (or away from) entrepreneurship in a time of prolonged crisis, and surface implications for business leaders and policymakers.</p>
+    </div>
+
+    <svg class="abs chart desk rates" style="--x:1111;--y:1347;--w:480" viewBox="0 0 480 480" role="img" aria-label="Rates of young entrepreneurship: Australia 4.4%, Brazil 13.7%, Germany 4%, India 12.2%, United States 9.4%"></svg>
+    <svg class="abs chart mob rates" style="--mx:12;--my:823;--mw:336" viewBox="0 0 336 363" role="img" aria-label="Rates of young entrepreneurship: Australia 4.4%, Brazil 13.7%, Germany 4%, India 12.2%, United States 9.4%"></svg>
+
+    <div class="abs scroll-prompt desk" style="--x:907;--y:1900;--w:107">
+      <span>Key findings</span>
+      <img src="assets/scroll-arrow.svg" alt="">
+    </div>
+  </section>
+
+  <!-- ================= S2 · #1 Aspiration ================= -->
+  <section class="sec slide" id="s2" style="--h:1080;--mh:868">
+    <div class="kf-head"><span class="label">Key findings</span><span class="num"><small>#</small>1</span></div>
+    <h2 class="abs h2 split" style="--x:192;--y:106;--w:1017;--mx:24;--my:88;--mw:311">The aspiration to own or establish their own business</h2>
+    <svg class="abs chart desk aspire" style="--x:191;--y:318;--w:1537" viewBox="191 318 1537 734" role="img" aria-label="77% aspire to own or establish their own business; 9% currently describe themselves as entrepreneurs">
+      <rect class="area" x="191" y="318" width="768" height="734" fill="#75cfbc"/>
+      <rect class="bar" x="960" y="966.2" width="768" height="85.8" fill="#f0d762"/>
+      <g class="t-area" fill="#fff">
+        <text x="230" y="524" font-size="232" font-weight="700" letter-spacing="-4" data-count="77" data-suffix="%">77%</text>
+        <text class="txt" font-size="20"><tspan x="255" y="556">aspire to own or</tspan><tspan x="255" dy="25">establish their</tspan><tspan x="255" dy="25">own business</tspan></text>
+      </g>
+      <g class="t-bar" fill="#fff">
+        <text x="977" y="1031" font-size="72" font-weight="700" data-count="9" data-suffix="%">9%</text>
+        <text class="txt" font-size="20"><tspan x="1093" y="1003">currently describe themselves</tspan><tspan x="1093" dy="24">as entrepreneurs</tspan></text>
+      </g>
+    </svg>
+    <svg class="abs chart mob aspire" style="--mx:24;--my:306;--mw:312" viewBox="24 306 312 500" role="img" aria-label="77% aspire to own or establish their own business; 9% currently describe themselves as entrepreneurs">
+      <rect class="area" x="24" y="306" width="156" height="500" fill="#75cfbc"/>
+      <rect class="bar" x="180" y="746" width="156" height="60" fill="#f0d762"/>
+      <g class="t-area" fill="#fff">
+        <text x="33" y="370" font-size="72" font-weight="700" letter-spacing="-1.5" data-count="77" data-suffix="%">77%</text>
+        <text class="txt" font-size="15"><tspan x="40" y="396">aspire to own or</tspan><tspan x="40" dy="18.75">establish their own</tspan><tspan x="40" dy="18.75">business</tspan></text>
+      </g>
+      <g class="t-bar" fill="#f0d762">
+        <text x="187" y="682" font-size="44" font-weight="700" data-count="9" data-suffix="%">9%</text>
+        <text class="txt" font-size="15"><tspan x="187" y="704">currently describe</tspan><tspan x="187" dy="16.8">themselves</tspan><tspan x="187" dy="16.8">as entrepreneurs</tspan></text>
+      </g>
+    </svg>
+    <p class="abs note reveal" style="--x:977;--y:318;--w:600;--mx:24;--my:205;--mw:312">Overall, while 77% of young adults aspire to own or establish their own business, only 9% currently describe themselves as entrepreneurs.</p>
+  </section>
+
+  <!-- ================= Insight 1 ================= -->
+  <section class="insight"><div class="insight-pin">
+    <img class="bulb" src="assets/insight-bulb.svg" alt="">
+    <p class="quote">The private sector can channel this entrepreneurial spirit to <span class="hl">promote innovation outside or within their companies.</span></p>
+    <div class="tag"><img src="assets/insight-triangle.svg" alt=""><span>Key insight</span></div>
+    <a class="down" href="#s3" aria-label="Next finding"><img src="assets/insight-download.svg" alt=""></a>
+  </div></section>
+
+  <!-- ================= S3 · #2 Independence ================= -->
+  <section class="sec slide" id="s3" style="--h:1080;--mh:814">
+    <div class="kf-head"><span class="num"><small>#</small>2</span></div>
+    <div class="abs" style="--x:192;--y:106;--w:1276;--mx:24;--my:70.75;--mw:311">
+      <h2 class="h2 split">A desire for independence</h2>
+      <p class="h2-sub split">is an important factor influencing career choices</p>
+    </div>
+    <svg class="abs chart desk venn" style="--x:482;--y:290;--w:957" viewBox="360 398 1200 790" role="img" aria-label="43% of current or aspiring entrepreneurs versus 26% of others cite a desire for independence">
+      <circle class="c-big" cx="755" cy="793" r="395" fill="#75cfbc"/>
+      <circle class="c-small" cx="1322" cy="793" r="237" fill="#c9766b" style="mix-blend-mode:multiply" data-from-x="380"/>
+      <text x="729.5" y="1023" font-size="168.2" font-weight="700" fill="#fff" letter-spacing="-5.9" data-count="43" data-suffix="%">43%</text>
+      <text x="1423.6" y="928" font-size="63.7" font-weight="700" fill="#fff" text-anchor="middle" data-count="26" data-suffix="%">26%</text>
+    </svg>
+    <svg class="abs chart mob venn" style="--mx:12;--my:182.6;--mw:336" viewBox="12 182.6 336 413" role="img" aria-label="43% of current or aspiring entrepreneurs versus 26% of others cite a desire for independence">
+      <circle class="c-big" cx="172" cy="342.6" r="160" fill="#75cfbc"/>
+      <circle class="c-small" cx="250.8" cy="498.6" r="97" fill="#c9766b" style="mix-blend-mode:multiply" data-from-y="160"/>
+      <text x="158" y="280.6" font-size="64.9" font-weight="700" fill="#fff" letter-spacing="-2.27" data-count="43" data-suffix="%">43%</text>
+      <text x="283" y="562" font-size="30.5" font-weight="700" fill="#fff" text-anchor="middle" data-count="26" data-suffix="%">26%</text>
+    </svg>
+    <p class="abs note reveal" style="--x:322;--y:944;--w:760;--mx:24;--my:690.4;--mw:312">While the ability to make money remains a top priority, a desire for independence is an important factor influencing career choices among current and aspiring entrepreneurs</p>
+    <div class="abs legend reveal" style="--x:1263;--y:944;--w:334;--mx:108;--my:614;--mw:229">
+      <div>Current or aspiring entrepreneurs <i style="background:#75cfbc"></i></div>
+      <div>Not current or aspiring entrepreneurs <i style="background:#c9766b"></i></div>
+    </div>
+  </section>
+
+  <!-- ================= Insight 2 ================= -->
+  <section class="insight"><div class="insight-pin">
+    <img class="bulb" src="assets/insight-bulb.svg" alt="">
+    <p class="quote"><span class="hl">Opportunities for intrapreneurship</span> could effectively channel entrepreneurial spirit in ways that benefit both employees and businesses.</p>
+    <div class="tag"><img src="assets/insight-triangle.svg" alt=""><span>Key insight</span></div>
+    <a class="down" href="#s4" aria-label="Next finding"><img src="assets/insight-download.svg" alt=""></a>
+  </div></section>
+
+  <!-- ================= S4 · #3 Financial constraints ================= -->
+  <section class="sec slide" id="s4" style="--h:1080;--mh:796">
+    <div class="kf-head"><span class="num"><small>#</small>3</span></div>
+    <h2 class="abs h2 split" style="--x:192;--y:106;--w:1276;--mx:24;--my:88;--mw:311">Financial constraints are holding aspiring entrepreneurs back</h2>
+    <svg class="abs chart desk tri" style="--x:99;--y:277;--w:1722" viewBox="-2 364 1924 826" role="img" aria-label="Barriers to entrepreneurship: lack of financial resources 43%, risk of starting a business 34%, lack of government support 27%, lack of social and professional connections 26%, lack of skills or expertise 24%">
+      <g class="shapes">
+        <polygon class="t" data-o="5" data-m points="1390.53,668.48 1648.06,1114.53 1133,1114.53" fill="#ace2d7"/>
+        <polygon class="t" data-o="2" data-m points="36.42,684.41 532.99,684.41 284.7,1114.47" fill="#ace2d7"/>
+        <polygon class="t" data-o="4" data-m points="1429.01,717.64 1886.6,717.64 1657.8,1113.93" fill="#ace2d7"/>
+        <polygon class="t" data-o="0" data-m points="704.5,403.1 1114.9,1113.94 294.1,1113.94" fill="#c9766b"/>
+        <polygon class="t" data-o="1" data-m points="799.25,551.48 1448.69,551.48 1123.97,1113.93" fill="#91d9c9"/>
+        <polygon class="t" data-o="7" points="1757.06,958.73 1846.83,1114.23 1667.28,1114.23" fill="#f0d762"/>
+        <polygon class="t" data-o="6" points="148.46,897.13 274.66,1115.71 22.27,1115.71" fill="#c8ece4"/>
+        <polygon class="t" data-o="3" points="492.06,594.43 584.4,594.43 538.23,674.4" fill="#c8ece4"/>
+        <polygon class="t" data-o="8" points="1762.65,951.04 1846.78,951.04 1804.71,1023.9" fill="#c8ece4"/>
+      </g>
+      <g class="tl" fill="#fff">
+        <text x="586" y="870" font-size="124" font-weight="700" letter-spacing="-4.3" data-count="43" data-suffix="%">43%</text>
+        <text class="txt" font-size="28" font-weight="500"><tspan x="586" y="913.6">lack of financial</tspan><tspan x="586" dy="34">resources</tspan></text>
+      </g>
+      <g class="tl" fill="#fff">
+        <text x="1056" y="758.3" font-size="80" font-weight="700" letter-spacing="-2.8" data-count="34" data-suffix="%">34%</text>
+        <text class="txt" font-size="24" font-weight="500"><tspan x="1056" y="793.3">Risk of</tspan><tspan x="1056" dy="29">starting a</tspan><tspan x="1056" dy="29">business</tspan></text>
+      </g>
+      <g class="tl" fill="#fff">
+        <text x="222" y="817.5" font-size="64" font-weight="700" letter-spacing="-2.2" data-count="26" data-suffix="%">26%</text>
+        <text class="txt" font-size="24" font-weight="500"><tspan x="222" y="850.9">Lack of social</tspan><tspan x="222" dy="29">and</tspan><tspan x="222" dy="29">professional</tspan><tspan x="222" dy="29">connections</tspan></text>
+      </g>
+      <g class="tl" fill="#fff">
+        <text x="1332" y="942.5" font-size="64" font-weight="700" letter-spacing="-2.2" data-count="27" data-suffix="%">27%</text>
+        <text class="txt" font-size="24" font-weight="500"><tspan x="1332" y="975.9">Lack of</tspan><tspan x="1332" dy="29">government</tspan><tspan x="1332" dy="29">support</tspan></text>
+      </g>
+      <g class="tl" fill="#fff">
+        <text x="1606" y="850.5" font-size="64" font-weight="700" letter-spacing="-2.2" data-count="24" data-suffix="%">24%</text>
+        <text class="txt" font-size="24" font-weight="500"><tspan x="1606" y="883.9">Lack of</tspan><tspan x="1606" dy="29">skills/</tspan><tspan x="1606" dy="29">expertise</tspan></text>
+      </g>
+    </svg>
+
+    <!-- Mobile: the same chart at 39% scale, panned horizontally -->
+    <div class="abs tri-scroll mob" data-lenis-prevent style="--mx:0;--my:292;--mw:360;--mhh:294">
+      <svg class="chart tri" viewBox="-207 292 753 294" role="img" aria-label="Barriers to entrepreneurship: lack of financial resources 43%, risk of starting a business 34%, lack of government support 27%, lack of social and professional connections 26%, lack of skills or expertise 24%">
+        <g class="shapes" transform="translate(-207 292) scale(0.3914) translate(2 -364)"></g>
+        <g class="tl" fill="#fff">
+          <text x="70" y="525.2" font-size="44" font-weight="700" letter-spacing="-1.54" data-count="43" data-suffix="%">43%</text>
+          <text class="txt" font-size="12" font-weight="500"><tspan x="70" y="540.7">Lack of</tspan><tspan x="70" dy="15">financial</tspan><tspan x="70" dy="15">resources</tspan></text>
+        </g>
+        <g class="tl" fill="#fff">
+          <text x="237" y="403.6" font-size="32" font-weight="700" letter-spacing="-1.12" data-count="34" data-suffix="%">34%</text>
+          <text class="txt" font-size="12" font-weight="500"><tspan x="237" y="417.9">Risk of</tspan><tspan x="237" dy="15">starting a</tspan><tspan x="237" dy="15">business</tspan></text>
+        </g>
+        <g class="tl" fill="#fff">
+          <text x="-94.8" y="441.9" font-size="25" font-weight="700" letter-spacing="-.88" data-count="26" data-suffix="%">26%</text>
+          <text class="txt" font-size="7.42" font-weight="500"><tspan x="-94.8" y="454.7">Lack of social</tspan><tspan x="-94.8" dy="9.3">and professional</tspan><tspan x="-94.8" dy="9.3">connections</tspan></text>
+        </g>
+        <g class="tl" fill="#fff">
+          <text x="335" y="527.6" font-size="32" font-weight="700" letter-spacing="-1.12" data-count="27" data-suffix="%">27%</text>
+          <text class="txt" font-size="12" font-weight="500"><tspan x="335" y="541.9">Lack of</tspan><tspan x="335" dy="15">government</tspan><tspan x="335" dy="15">support</tspan></text>
+        </g>
+        <g class="tl" fill="#fff">
+          <text x="442.6" y="455.3" font-size="25" font-weight="700" letter-spacing="-.88" data-count="24" data-suffix="%">24%</text>
+          <text class="txt" font-size="7.42" font-weight="500"><tspan x="442.6" y="468.2">Lack of</tspan><tspan x="442.6" dy="9.3">skills/</tspan><tspan x="442.6" dy="9.3">expertise</tspan></text>
+        </g>
+      </svg>
+    </div>
+    <div class="abs drag mob" style="--mx:24;--my:609.73;--mw:312;--mhh:36" aria-hidden="true"><span class="handle"><img src="assets/drag-arrows.svg" alt=""></span></div>
+    <div class="abs barriers mob" style="--mx:0;--my:669.73;--mw:360">
+      <p>Barriers to entrepreneurship</p>
+      <div class="tabs" role="group" aria-label="Respondents">
+        <button class="on" aria-pressed="true">Combined</button>
+        <button aria-disabled="true" title="Male/female split not included in this demo">Male</button>
+        <button aria-disabled="true" title="Male/female split not included in this demo">Female</button>
+      </div>
+    </div>
+
+    <p class="abs note reveal" data-reveal="tri" style="--x:322;--y:980;--w:800;--mx:24;--my:205;--mw:312">The most common barrier to entrepreneurship cited by survey respondents was a lack of financial resources.</p>
+  </section>
+
+  <!-- ================= Insight 3 ================= -->
+  <section class="insight"><div class="insight-pin">
+    <img class="bulb" src="assets/insight-bulb.svg" alt="">
+    <p class="quote"><span class="hl">Businesses should expand and raise awareness of existing financial products and incentives,</span> especially those designed to help women and low income individuals.</p>
+    <div class="tag"><img src="assets/insight-triangle.svg" alt=""><span>Key insight</span></div>
+    <a class="down" href="#s5" aria-label="Next finding"><img src="assets/insight-download.svg" alt=""></a>
+  </div></section>
+
+  <!-- ================= S5 · #4 Necessity ================= -->
+  <section class="sec slide" id="s5" style="--h:1080;--mh:788">
+    <div class="kf-head"><span class="num"><small>#</small>4</span></div>
+    <div class="abs" style="--x:192;--y:106;--w:1276;--mx:24;--my:88;--mw:312">
+      <h2 class="h2 split">Entrepreneurs by necessity</h2>
+      <p class="h2-sub split" style="--sw:1161">Weak job markets are likely elevating ‘necessity entrepreneurship’ among young people in Brazil and India.</p>
+    </div>
+    <svg class="abs chart desk bubbles" style="--x:760;--y:300;--w:840" viewBox="452 436 1016 910" role="img" aria-label="Early-stage entrepreneurs motivated to earn a living: India 87%, Brazil 82%, USA 50%, Germany 45%">
+      <g class="bub" data-cx="721.77" data-cy="779.34">
+        <circle cx="721.77" cy="779.34" r="269.77" fill="#c9766b"/>
+        <text x="721.77" y="904.5" font-size="28" font-weight="500" fill="#fff" letter-spacing="-.84">India</text>
+        <text x="721.77" y="977.3" font-size="84" font-weight="700" fill="#fff" letter-spacing="-2.5" data-count="87" data-suffix="%">87%</text>
+      </g>
+      <g class="bub" data-cx="1214" data-cy="974.95">
+        <circle cx="1214" cy="974.95" r="254" fill="#75cfbc"/>
+        <text x="1211.08" y="1077.3" font-size="28" font-weight="500" fill="#fff" letter-spacing="-.84">Brazil</text>
+        <text x="1211.08" y="1150.2" font-size="84" font-weight="700" fill="#fff" letter-spacing="-2.5" data-count="82" data-suffix="%">82%</text>
+      </g>
+      <g class="bub" data-cx="1097.8" data-cy="584.31">
+        <circle cx="1097.8" cy="584.31" r="148.31" fill="#ace2d7"/>
+        <text x="1090.8" y="642.9" font-size="28" font-weight="500" fill="#fff" letter-spacing="-.84">Germany</text>
+        <text x="1090.8" y="688.5" font-size="50" font-weight="700" fill="#fff" letter-spacing="-1.5" data-count="45" data-suffix="%">45%</text>
+      </g>
+      <g class="bub" data-cx="854.9" data-cy="1189.24">
+        <circle cx="854.9" cy="1189.24" r="156.49" fill="#ace2d7"/>
+        <text x="846.72" y="1260.7" font-size="28" font-weight="500" fill="#fff" letter-spacing="-.84">USA</text>
+        <text x="846.72" y="1306.3" font-size="50" font-weight="700" fill="#fff" letter-spacing="-1.5" data-count="50" data-suffix="%">50%</text>
+      </g>
+    </svg>
+    <svg class="abs chart mob bubbles" style="--mx:16;--my:275;--mw:329" viewBox="16 275 329 368" role="img" aria-label="Early-stage entrepreneurs motivated to earn a living: India 87%, Brazil 82%, USA 50%, Germany 45%">
+      <g class="bub" data-cx="121" data-cy="380">
+        <circle cx="121" cy="380" r="105" fill="#c9766b"/>
+        <text x="120" y="402.6" font-size="12" font-weight="500" fill="#fff">India</text>
+        <text x="120" y="440.1" font-size="44" font-weight="700" fill="#fff" letter-spacing="-1.32" data-count="87" data-suffix="%">87%</text>
+      </g>
+      <g class="bub" data-cx="246.04" data-cy="544.25">
+        <circle cx="246.04" cy="544.25" r="98" fill="#75cfbc"/>
+        <text x="246" y="548.6" font-size="12" font-weight="500" fill="#fff">Brazil</text>
+        <text x="246" y="586.1" font-size="44" font-weight="700" fill="#fff" letter-spacing="-1.32" data-count="82" data-suffix="%">82%</text>
+      </g>
+      <g class="bub" data-cx="287.5" data-cy="390.5">
+        <circle cx="287.5" cy="390.5" r="57.5" fill="#ace2d7"/>
+        <text x="287.74" y="408" font-size="12" font-weight="500" fill="#fff">Germany</text>
+        <text x="287.74" y="426.3" font-size="20" font-weight="700" fill="#fff" data-count="45" data-suffix="%">45%</text>
+      </g>
+      <g class="bub" data-cx="83.7" data-cy="544.36">
+        <circle cx="83.7" cy="544.36" r="60.5" fill="#ace2d7"/>
+        <text x="84" y="568.6" font-size="12" font-weight="500" fill="#fff">USA</text>
+        <text x="84" y="586.9" font-size="20" font-weight="700" fill="#fff" data-count="50" data-suffix="%">50%</text>
+      </g>
+    </svg>
+    <p class="abs note reveal" style="--x:322;--y:980;--w:600;--mx:24;--my:666.25;--mw:204">Early-stage entrepreneurs who say their motivation to launch a business is to “earn a living.”</p>
+  </section>
+
+  <!-- ================= Insight 4 ================= -->
+  <section class="insight"><div class="insight-pin">
+    <img class="bulb" src="assets/insight-bulb.svg" alt="">
+    <p class="quote">Business leaders need to create ways to <span class="hl">recognize talented young people who have not earned college degrees,</span> facilitate their entry into the workforce and provide avenues for their professional growth</p>
+    <div class="tag"><img src="assets/insight-triangle.svg" alt=""><span>Key insight</span></div>
+    <a class="down" href="#s6" aria-label="Next finding"><img src="assets/insight-download.svg" alt=""></a>
+  </div></section>
+
+  <!-- ================= S6 · #5 Upskilling ================= -->
+  <section class="sec slide" id="s6" style="--h:1080;--mh:802">
+    <div class="kf-head"><span class="num"><small>#</small>5</span></div>
+    <div class="abs" style="--x:192;--y:106;--w:1276;--mx:24;--my:74.87;--mw:312">
+      <h2 class="h2 split" style="line-height:1;letter-spacing:-.03em">Proactively upskilling online</h2>
+      <p class="h2-sub split" style="--sw:1201">Young people in these entrepreneurial ecosystems are eager to learn and are exploring alternatives to traditional education.</p>
+    </div>
+    <svg class="abs chart desk rings" style="--x:373;--y:316;--w:1174" viewBox="320 462 1280 665" role="img" aria-label="76% agree that they had participated in online education or courses to improve their professional skill"
+         data-cols="10" data-on="7,7,8,8,8" data-cx="374" data-cy="516" data-pitch="130.159" data-r="40.5" data-sw="27">
+      <g class="grid"></g>
+      <rect class="under" x="320" y="1121" width="1019" height="6" fill="#c9766b"/>
+    </svg>
+    <svg class="abs chart mob rings" style="--mx:16;--my:260.73;--mw:328" viewBox="16 260.73 328 347" role="img" aria-label="76% agree that they had participated in online education or courses to improve their professional skill"
+         data-cols="6" data-on="4,4,4,5,5,5" data-cx="40" data-cy="284.73" data-pitch="56" data-r="18" data-sw="12">
+      <g class="grid"></g>
+      <rect class="under" x="16" y="603.73" width="272" height="4" fill="#c9766b"/>
+    </svg>
+    <div class="abs s6-stat" style="--x:380;--y:948;--mx:16;--my:615.73;--mw:300">
+      <span class="big" data-count="76" data-suffix="%">76%</span>
+      <p>agree that they had participated in online education or courses to improve their professional skill</p>
+    </div>
+  </section>
+
+  <!-- ================= Insight 5 ================= -->
+  <section class="insight"><div class="insight-pin">
+    <img class="bulb" src="assets/insight-bulb.svg" alt="">
+    <p class="quote">The private sector could support the start-up ecosystem <span class="hl">through business skill-development efforts.</span></p>
+    <div class="tag"><img src="assets/insight-triangle.svg" alt=""><span>Key insight</span></div>
+    <a class="down" href="#cta" aria-label="Explore the report"><img src="assets/insight-download.svg" alt=""></a>
+  </div></section>
+
+  <!-- ================= CTA ================= -->
+  <section class="sec cta" id="cta" style="--h:432;--mh:576">
+    <div class="abs card" style="--x:392;--y:56;--w:1136;--hh:321;--mx:0;--my:0;--mw:360;--mhh:576">
+      <div class="abs cta-map" style="--x:-102;--y:29;--w:728.61;--hh:301.94;--mx:-107.12;--my:133;--mw:550.35;--mhh:228.07"><img src="assets/cta-map.svg" alt=""></div>
+      <img class="abs dot" src="assets/cta-dot.svg" alt="" style="--x:227;--y:123;--mx:141.39;--my:203.21">
+      <img class="abs dot" src="assets/cta-dot.svg" alt="" style="--x:119;--y:256;--mx:59.82;--my:303.68">
+      <img class="abs dot" src="assets/cta-dot.svg" alt="" style="--x:44;--y:151;--mx:3.16;--my:224.37">
+      <img class="abs dot" src="assets/cta-dot.svg" alt="" style="--x:343;--y:180;--mx:229.01;--my:246.27">
+      <img class="abs dot" src="assets/cta-dot.svg" alt="" style="--x:436;--y:284;--mx:299.26;--my:324.82">
+      <span class="abs pct" style="--x:429;--y:266;--mx:293.97;--my:311.23">44%</span>
+      <span class="abs pct" style="--x:336;--y:161;--mx:223.73;--my:231.92">35%</span>
+      <span class="abs pct" style="--x:218;--y:105;--mx:134.6;--my:189.62">56%</span>
+      <span class="abs pct" style="--x:35;--y:132;--mx:-3.63;--my:210.01">51%</span>
+      <span class="abs pct" style="--x:112;--y:238;--mx:54.53;--my:290.08">60%</span>
+      <div class="abs thumb" style="--x:454;--y:56;--w:140;--hh:200;--mx:30;--my:38;--mw:140;--mhh:200">
+        <div class="bar"><img src="assets/cta-report-logo.svg" alt=""></div>
+        <img class="shot" src="assets/cta-report.png" alt="">
+      </div>
+      <img class="abs" src="assets/cta-logo.svg" alt="Economist Impact" style="--x:29;--y:215;--w:157;--hh:78.5;--mx:228;--my:38;--mw:108;--mhh:54">
+      <div class="abs cta-copy" style="--x:656;--y:69;--mx:33;--my:383.07">
+        <p>What factors are creating a gap between entrepreneurial aspirations and reality?</p>
+        <a class="btn" href="#"><img src="assets/cta-arrow.svg" alt="">Explore our findings</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <nav>
+      <span>Terms of use</span><span>Privacy</span><span>Cookie Policy</span><span>Manage Cookies</span><span>Accessibility</span><span>Modern Slavery Statement</span><span>Do Not Sell My Personal Information</span>
+    </nav>
+    <span>Copyright © The Economist Newspaper Limited 2021. All rights reserved.</span>
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
