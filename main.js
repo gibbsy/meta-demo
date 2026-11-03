@@ -296,20 +296,25 @@ if (!window.gsap || !window.ScrollTrigger || !window.SplitText || reduceMotion) 
       .from(".lockup .yo, .lockup .across", { opacity: 0, y: 12, stagger: 0.1, duration: 0.6 }, 1.95);
     if (!desk) heroTl.from(".pin", { scale: 0, opacity: 0, transformOrigin: "7px 50%", stagger: 0.1, duration: 0.6, ease: "back.out(2.5)" }, 2.9);
 
-    // Leader lines draw from the map pin leftwards, then down to the stat
+    // Leader lines draw from the map pin leftwards, then down to the stat.
+    // They wait for the map split to finish, but only while it is still running: scrolled into view later, they start at once.
     if (desk) {
+      const afterSplit = (trigger, start, at, stagger) => {
+        const tl = gsap.timeline({ paused: true });
+        ScrollTrigger.create({ trigger, start, once: true, onEnter: () => gsap.delayedCall(Math.max(stagger, at - heroTl.time()), () => tl.play()) });
+        return tl;
+      };
       document.querySelectorAll(".leader").forEach((el, i) => {
-        const tl = onView(el, "top 90%");
-        const d = 3 + i * 0.12; // after the map has split
+        const tl = afterSplit(el, "top 90%", 3 + i * 0.12, i * 0.12);
         if (el.dataset.leader === "h") {
-          tl.fromTo(el, { clipPath: "inset(0% 0% 99% 100%)" }, { clipPath: "inset(0% 0% 99% 0%)", duration: 0.45, ease: "power2.in" }, d)
+          tl.fromTo(el, { clipPath: "inset(0% 0% 99% 100%)" }, { clipPath: "inset(0% 0% 99% 0%)", duration: 0.45, ease: "power2.in" })
             .to(el, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.7, ease: "power2.out" });
         } else {
-          tl.fromTo(el, { clipPath: "inset(0% 0% 100% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.7 }, d);
+          tl.fromTo(el, { clipPath: "inset(0% 0% 100% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.7 });
         }
       });
       gsap.utils.toArray(".stat").forEach((s, i) => {
-        onView(s, "top 95%").from(s, { y: 40, opacity: 0, duration: 0.9 }, 3.4 + i * 0.12);
+        afterSplit(s, "top 95%", 3.4 + i * 0.12, 0.3 + i * 0.12).from(s, { y: 40, opacity: 0, duration: 0.9 });
       });
     }
 
