@@ -77,6 +77,12 @@ button { font: inherit; background: none; color: inherit; }
   }
   .page .slide .abs .abs { --ox: 0px; --oy: 0px; }
   .page .slide .kf-head { top: calc(var(--oy) + 18 * var(--u)); }
+
+  /* Header, hero and intro take two screens together, so finding 1 starts exactly 200vh down.
+     The intro block (design y 1300-2000) is centred in the second screen, but never moves above its
+     designed spot, so on short screens it still clears the map stats. */
+  .page #s1 { --nav: max(calc(112 * var(--b)), 64px); height: max(calc(200svh - var(--nav)), calc(var(--h) * var(--b))); }
+  .page #s1 .screen2 { --oy: max(0px, calc(150svh - var(--nav) - 1650 * var(--b))); }
 }
 
 .display { font-family: var(--display); }
@@ -168,9 +174,9 @@ svg .txt { font-family: var(--text); }
 .s6-stat .big { flex: none; font-family: var(--display); font-weight: 700; color: var(--red); font-size: calc(128 * var(--u)); line-height: .9; letter-spacing: -.03em; white-space: nowrap; }
 .s6-stat p { width: calc(520 * var(--u)); padding-top: calc(4 * var(--u)); font-size: calc(24 * var(--u)); line-height: 1.5; color: #000; }
 
-/* ---------- Insight: full viewport, holds in place for ~20vh of scroll ---------- */
-.insight { position: relative; height: 120vh; height: 120svh; background: var(--ink); }
-.insight-pin { position: sticky; top: 0; height: 100vh; height: 100svh; display: grid; place-items: center; overflow: clip; }
+/* ---------- Insight: one full viewport, a snap point like the finding slides ---------- */
+.insight { position: relative; background: var(--ink); }
+.insight-pin { height: 100vh; height: 100svh; display: grid; place-items: center; overflow: clip; }
 .insight .bulb { position: absolute; left: calc(72 * var(--u)); top: calc(72 * var(--u)); width: calc(21 * var(--u)); height: calc(33 * var(--u)); }
 .insight .tag { position: absolute; left: calc(72 * var(--u)); bottom: calc(72 * var(--u)); display: flex; flex-direction: column; align-items: center; gap: calc(4 * var(--u)); }
 .insight .tag img { width: max(calc(9 * var(--u)), 7px); transform: rotate(180deg); }
@@ -288,6 +294,4 @@ footer nav { display: flex; flex-wrap: wrap; gap: 8px 24px; max-width: 760px; }
 
 @media (prefers-reduced-motion: reduce) {
   .scroll-prompt img { animation: none; }
-  .insight { height: auto; }
-  .insight-pin { position: relative; }
 }

@@ -119,7 +119,7 @@ if (!window.gsap || !window.ScrollTrigger || !window.SplitText || reduceMotion) 
   gsap.registerPlugin(ScrollTrigger, SplitText);
   gsap.defaults({ ease: "power3.out", duration: 1 });
 
-  // Smooth scrolling: Lenis keeps native scroll (so sticky insights still work) and runs on GSAP's ticker
+  // Smooth scrolling: Lenis keeps native scroll and runs on GSAP's ticker
   if (window.Lenis) {
     const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 0.9 });
     lenis.on("scroll", ScrollTrigger.update);
@@ -134,29 +134,24 @@ if (!window.gsap || !window.ScrollTrigger || !window.SplitText || reduceMotion) 
       });
     });
 
-    // Slideshow snapping (desktop): once scrolling settles, ease to the nearest finding slide or insight.
-    // An insight's 20vh hold counts as one resting zone. Inside the run of slides it always settles,
-    // leaning toward the scroll direction; at the run's edges (hero, CTA) only when already close.
+    // Slideshow snapping (desktop): once scrolling settles, ease to the top of the nearest finding or insight.
+    // Inside the run of slides it always settles, leaning toward the scroll direction;
+    // at the run's edges (hero, CTA) only when already close.
     const desktopMq = window.matchMedia("(min-width: 960px)");
     let snapTimer;
-    const zones = () => [...document.querySelectorAll(".slide, .insight")].map((el) => {
-      const top = el.getBoundingClientRect().top + lenis.scroll;
-      return [top, top + Math.max(0, el.offsetHeight - innerHeight)];
-    });
     const snap = () => {
       if (!desktopMq.matches) return;
       const y = lenis.scroll, vh = innerHeight;
-      const zs = zones();
-      if (zs.some(([a, b]) => y >= a - 1 && y <= b + 1)) return;
-      const next = zs.find(([a]) => a > y), prev = [...zs].reverse().find(([, b]) => b < y);
+      const tops = [...document.querySelectorAll(".slide, .insight")].map((el) => el.getBoundingClientRect().top + y);
+      if (tops.some((t) => Math.abs(t - y) <= 1)) return;
+      const next = tops.find((t) => t > y), prev = tops.findLast((t) => t < y);
       let to;
-      if (prev && next && next[0] - prev[1] <= vh * 1.05) {
-        const p = (y - prev[1]) / (next[0] - prev[1]);
-        to = (lenis.direction >= 0 ? p > 0.3 : p > 0.7) ? next[0] : prev[1];
+      if (prev != null && next != null && next - prev <= vh * 1.05) {
+        const p = (y - prev) / (next - prev);
+        to = (lenis.direction >= 0 ? p > 0.3 : p > 0.7) ? next : prev;
       } else {
-        const near = [prev && prev[1], next && next[0]].filter((v) => v != null && Math.abs(v - y) < vh * 0.2);
-        if (!near.length) return;
-        to = near.sort((a, b) => Math.abs(a - y) - Math.abs(b - y))[0];
+        to = [prev, next].filter((t) => t != null && Math.abs(t - y) < vh * 0.2).sort((a, b) => Math.abs(a - y) - Math.abs(b - y))[0];
+        if (to == null) return;
       }
       // A running snap scrolls every frame, so the idle timer below can't start another mid-snap
       lenis.scrollTo(to, { duration: 0.9, easing: (t) => 1 - Math.pow(1 - t, 3) });
