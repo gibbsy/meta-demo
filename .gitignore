@@ -2,3 +2,5 @@
 .claude/
 ref/
 exports/
+node_modules/
+dist/
