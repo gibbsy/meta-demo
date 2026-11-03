@@ -162,15 +162,59 @@ if (!window.gsap || !window.ScrollTrigger || !window.SplitText || reduceMotion) 
     });
   }
 
-  const fmt = (el, v) => {
-    const dec = String(el.dataset.count).includes(".") ? 1 : 0;
-    el.textContent = (dec ? v.toFixed(dec) : Math.round(v)) + (el.dataset.suffix || "");
+  // Ticker, like the 3000 in the hero: each digit is a mask, and a reel of numbers rolls up through it to the
+  // final digit. Later digits roll further, like an odometer. Digits are hidden up front; an SVG reel is measured
+  // and built the first time it plays, once fonts have settled. Returns a timeline to place in the chart's timeline.
+  let tickId = 0;
+  const prepTicker = (el) => {
+    const svg = el instanceof SVGElement;
+    const digits = [];
+    const final = el.textContent;
+    el.textContent = "";
+    if (!svg) el.classList.add("tick");
+    [...final].forEach((ch, index) => {
+      const isDigit = /\d/.test(ch);
+      const len = 5 + 2 * digits.length;
+      const seq = isDigit && Array.from({ length: len }, (_, i) => (+ch - len + 1 + i + 100) % 10); // ends on the digit
+      if (svg) {
+        const t = svgEl("tspan", isDigit ? { "fill-opacity": 0 } : {}, el);
+        t.textContent = ch;
+        if (isDigit) digits.push({ seq, index });
+      } else if (isDigit) {
+        const d = document.createElement("span");
+        d.className = "digit";
+        d.innerHTML = `<span class="ghost">${ch}</span><span class="reel">${seq.map((v) => `<span>${v}</span>`).join("")}</span>`;
+        el.append(d);
+        digits.push({ seq, reel: d.lastChild });
+        gsap.set(d.lastChild, { yPercent: 100 / seq.length });
+      } else el.append(ch);
+    });
+    const buildSvgReel = (d) => {
+      const box = el.getExtentOfChar(d.index);
+      const id = `tick${tickId++}`;
+      const clip = svgEl("clipPath", { id }, el.ownerSVGElement);
+      svgEl("rect", { x: box.x - box.width, y: box.y, width: box.width * 3, height: box.height }, clip); // only the height clips
+      const g = svgEl("g", { "clip-path": `url(#${id})` });
+      el.after(g);
+      d.reel = svgEl("g", {}, g);
+      d.pitch = box.height;
+      d.seq.forEach((v, k) => {
+        const attrs = { x: box.x + box.width / 2, y: Number(el.getAttribute("y")) + k * box.height, "text-anchor": "middle" };
+        for (const a of ["class", "font-size", "font-weight", "fill"]) if (el.hasAttribute(a)) attrs[a] = el.getAttribute(a);
+        svgEl("text", attrs, d.reel).textContent = v;
+      });
+    };
+    return (duration) => digits.forEach((d, i) => {
+      const n = d.seq.length, vars = { duration, ease: "power3.inOut", delay: i * 0.08 };
+      if (svg) {
+        if (!d.reel) buildSvgReel(d);
+        gsap.fromTo(d.reel, { y: d.pitch }, { y: -(n - 1) * d.pitch, ...vars });
+      } else gsap.fromTo(d.reel, { yPercent: 100 / n }, { yPercent: -100 * (n - 1) / n, ...vars });
+    });
   };
-  // A tween that counts an element up from 0 to its data-count
-  const countUp = (el, opts = {}) => {
-    const o = { v: 0 };
-    fmt(el, 0);
-    return gsap.to(o, { v: parseFloat(el.dataset.count), duration: 1.4, ease: "power2.out", ...opts, onUpdate: () => fmt(el, o.v) });
+  const ticker = (el, { duration = 1.4 } = {}) => {
+    const play = (el._ticker ||= prepTicker(el));
+    return gsap.timeline().call(() => play(duration));
   };
   // Paused timeline that plays the first time its trigger scrolls into view.
   // The trigger only calls play(), so ScrollTrigger refreshes never rewind it.
@@ -321,7 +365,7 @@ if (!window.gsap || !window.ScrollTrigger || !window.SplitText || reduceMotion) 
       .from(rates.querySelectorAll(".max"), { opacity: 0, stagger: 0.08, duration: 0.4 }, 0.7);
     rates.querySelectorAll(".rate").forEach((g, i) => {
       ratesTl.from(g.querySelector(".fill"), { attr: { width: 0 }, duration: 1.2 }, 0.75 + i * 0.12)
-        .add(countUp(g.querySelector("[data-count]"), { duration: 1.2 }), 0.75 + i * 0.12);
+        .add(ticker(g.querySelector("[data-count]"), { duration: 1.2 }), 0.75 + i * 0.12);
     });
 
     // #1 · 77% area vs 9% bar
@@ -330,23 +374,26 @@ if (!window.gsap || !window.ScrollTrigger || !window.SplitText || reduceMotion) 
       .from(asp.querySelector(".area"), desk
         ? { scaleX: 0.04, scaleY: 0.04, transformOrigin: "0% 100%", duration: 1.6, ease: "expo.inOut" }
         : { scaleY: 0, transformOrigin: "50% 100%", duration: 1.4, ease: "expo.inOut" })
-      .add(countUp(asp.querySelector(".t-area [data-count]"), { duration: 1.6 }), 0.3)
-      .from(asp.querySelectorAll(".t-area > *"), { opacity: 0, y: 20, stagger: 0.1, duration: 0.6 }, 0.4)
+      // Each block's text arrives once its shape has finished drawing
+      .add(ticker(asp.querySelector(".t-area [data-count]"), { duration: 1.3 }), desk ? 1.35 : 1.2)
+      .from(asp.querySelectorAll(".t-area > *"), { opacity: 0, y: 20, stagger: 0.1, duration: 0.6 }, desk ? 1.35 : 1.2)
       .from(asp.querySelector(".bar"), desk
         ? { scaleX: 0, transformOrigin: "0% 50%", duration: 1, ease: "power3.inOut" }
         : { scaleY: 0, transformOrigin: "50% 100%", duration: 0.8, ease: "power3.inOut" }, 1.2)
-      .add(countUp(asp.querySelector(".t-bar [data-count]"), { duration: 1 }), 1.4)
-      .from(asp.querySelectorAll(".t-bar > *"), { opacity: 0, x: -16, stagger: 0.1, duration: 0.5 }, 1.5);
+      .add(ticker(asp.querySelector(".t-bar [data-count]"), { duration: 1 }), desk ? 2.1 : 1.9)
+      .from(asp.querySelectorAll(".t-bar > *"), { opacity: 0, x: -16, stagger: 0.1, duration: 0.5 }, desk ? 2.1 : 1.9);
 
     // #2 · Venn
     const venn = $(`svg.venn${L}`);
     const small = venn.querySelector(".c-small");
+    const centre = (c) => `${c.getAttribute("cx")} ${c.getAttribute("cy")}`; // svgOrigin: the circle's own centre
+    const vennNums = venn.querySelectorAll("[data-count]");
     onView(venn, "top 70%")
-      .from(venn.querySelector(".c-big"), { scale: 0, transformOrigin: "50% 50%", duration: 1.4, ease: "back.out(1.3)" })
-      .from(small, { scale: 0.3, x: Number(small.dataset.fromX || 0), y: Number(small.dataset.fromY || 0), opacity: 0, transformOrigin: "50% 50%", duration: 1.4, ease: "expo.out" }, 0.45)
-      .from(venn.querySelectorAll("text"), { opacity: 0, y: 20, stagger: 0.15, duration: 0.7 }, 0.7)
-      .add(countUp(venn.querySelectorAll("text")[0]), 0.7)
-      .add(countUp(venn.querySelectorAll("text")[1]), 0.85);
+      .from(venn.querySelector(".c-big"), { scale: 0, svgOrigin: centre(venn.querySelector(".c-big")), duration: 1.4, ease: "back.out(1.3)" })
+      .from(small, { scale: 0.3, x: Number(small.dataset.fromX || 0), y: Number(small.dataset.fromY || 0), opacity: 0, svgOrigin: centre(small), duration: 1.4, ease: "expo.out" }, 0.45)
+      .from(vennNums, { opacity: 0, y: 20, stagger: 0.15, duration: 0.7 }, 0.7)
+      .add(ticker(vennNums[0]), 0.7)
+      .add(ticker(vennNums[1]), 0.85);
 
     // #3 · Triangles slide out from behind their flat edge
     const tri = desk ? $("svg.tri.desk") : $(".tri-scroll svg");
@@ -356,7 +403,7 @@ if (!window.gsap || !window.ScrollTrigger || !window.SplitText || reduceMotion) 
     });
     tri.querySelectorAll(".tl").forEach((g, i) => {
       triTl.from(g, { opacity: 0, y: 16, duration: 0.6 }, 0.7 + i * 0.12)
-        .add(countUp(g.querySelector("[data-count]"), { duration: 1.1 }), 0.7 + i * 0.12);
+        .add(ticker(g.querySelector("[data-count]"), { duration: 1.1 }), 0.7 + i * 0.12);
     });
     // The note sits at the very bottom of the desktop slide, so it rides in with the triangles
     const triNote = $('[data-reveal="tri"]');
@@ -367,8 +414,8 @@ if (!window.gsap || !window.ScrollTrigger || !window.SplitText || reduceMotion) 
     const bubTl = onView(bub, "top 70%");
     bub.querySelectorAll(".bub").forEach((g, i) => {
       bubTl.from(g, { scale: 0, svgOrigin: `${g.dataset.cx} ${g.dataset.cy}`, duration: 1.2, ease: "elastic.out(1, 0.6)" }, i * 0.18)
-        .from(g.querySelectorAll("text"), { opacity: 0, y: 10, stagger: 0.08, duration: 0.5 }, i * 0.18 + 0.4)
-        .add(countUp(g.querySelector("[data-count]"), { duration: 1.2 }), i * 0.18 + 0.4);
+        .from(g.querySelectorAll(":scope > text"), { opacity: 0, y: 10, stagger: 0.08, duration: 0.5 }, i * 0.18 + 0.4)
+        .add(ticker(g.querySelector("[data-count]"), { duration: 1.2 }), i * 0.18 + 0.4);
       gsap.to(g.querySelector("circle"), { y: i % 2 ? 6 : -6, duration: 2.6 + i * 0.4, ease: "sine.inOut", yoyo: true, repeat: -1, delay: 1.5 });
     });
 
@@ -379,19 +426,10 @@ if (!window.gsap || !window.ScrollTrigger || !window.SplitText || reduceMotion) 
     const pitch = Number(rings.dataset.pitch);
     const each = desk ? 0.035 : 0.045;
     const span = ringEls.length * each + 0.4;
-    const big = $(".s6-stat .big");
-    const counter = { v: 0 };
-    // The digits are proportional, so fix the number's width at its widest value to keep the copy beside it still
-    const lockWidth = () => {
-      let max = 0;
-      for (let v = 0; v <= 76; v++) { fmt(big, v); max = Math.max(max, big.getBoundingClientRect().width); }
-      big.style.width = `${max / parseFloat(getComputedStyle(big).fontSize)}em`;
-    };
     onView(rings, "top 75%")
-      .call(lockWidth, null, 0)
       .from(ringEls, { y: -pitch * 1.2, opacity: 0, duration: 0.75, ease: "bounce.out", stagger: each })
       .from(rings.querySelector(".under"), { attr: { width: 0 }, duration: span, ease: "power1.inOut" }, 0.2)
-      .fromTo(counter, { v: 0 }, { v: 76, duration: span, ease: "power1.inOut", onUpdate: () => fmt(big, counter.v) }, 0.2)
+      .add(ticker($(".s6-stat .big"), { duration: span }), 0.2)
       .from(".s6-stat p", { opacity: 0, y: 16, duration: 0.6 }, 0.4);
   });
 
