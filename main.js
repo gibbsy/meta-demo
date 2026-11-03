@@ -297,10 +297,6 @@ if (!window.gsap || !window.ScrollTrigger || !window.SplitText || reduceMotion) 
   });
 
   /* --- Shared reveals --- */
-  // [data-reveal] elements are revealed by their chart's timeline instead
-  gsap.utils.toArray(".reveal:not([data-reveal])").forEach((el) => {
-    onView(el, "top 88%").from(el, { y: 50, opacity: 0, duration: 1.1 });
-  });
   gsap.utils.toArray(".kf-head").forEach((el) => {
     onView(el, "top 90%")
       .fromTo(el, { "--line": 0 }, { "--line": 1, duration: 1.2, ease: "power2.inOut" })
@@ -369,6 +365,13 @@ if (!window.gsap || !window.ScrollTrigger || !window.SplitText || reduceMotion) 
       });
     }
 
+    // Notes and legends. On a desktop slide they sit near its bottom edge, where their own "top 88%" may never be
+    // reached while the slide is in view (short screens), so they play once their slide is half in view instead.
+    gsap.utils.toArray(".reveal").forEach((el) => {
+      const slide = desk && el.closest(".slide");
+      onView(slide || el, slide ? "top 50%" : "top 88%").from(el, { y: 50, opacity: 0, duration: 1.1 });
+    });
+
     // Rates bars
     const rates = $(`svg.rates${L}`);
     const ratesTl = onView(rates, "top 75%")
@@ -417,9 +420,6 @@ if (!window.gsap || !window.ScrollTrigger || !window.SplitText || reduceMotion) 
       triTl.from(g, { opacity: 0, y: 16, duration: 0.6 }, 0.7 + i * 0.12)
         .add(ticker(g.querySelector("[data-count]"), { duration: 1.1 }), 0.7 + i * 0.12);
     });
-    // The note sits at the very bottom of the desktop slide, so it rides in with the triangles
-    const triNote = $('[data-reveal="tri"]');
-    (desk ? triTl : onView(triNote, "top 88%")).from(triNote, { y: 50, opacity: 0, duration: 1.1 }, desk ? 0.6 : 0);
 
     // #4 · Bubbles pop in, then idle-float
     const bub = $(`svg.bubbles${L}`);
