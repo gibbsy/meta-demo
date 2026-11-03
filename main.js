@@ -162,59 +162,71 @@ if (!window.gsap || !window.ScrollTrigger || !window.SplitText || reduceMotion) 
     });
   }
 
-  // Ticker, like the 3000 in the hero: each digit is a mask, and a reel of numbers rolls up through it to the
-  // final digit. Later digits roll further, like an odometer. Digits are hidden up front; an SVG reel is measured
-  // and built the first time it plays, once fonts have settled. Returns a timeline to place in the chart's timeline.
+  // Ticker, like the 3000 in the hero: each character sits in its own mask. A digit's reel of numbers rolls up
+  // through it to the final digit, later digits rolling further like an odometer; the % (and any decimal point)
+  // rises into place as the digits finish. Everything is hidden up front; an SVG reel is measured and built the
+  // first time it plays, once fonts have settled. Returns a timeline to place in the chart's timeline.
   let tickId = 0;
   const prepTicker = (el) => {
     const svg = el instanceof SVGElement;
-    const digits = [];
+    const chars = [];
     const final = el.textContent;
     el.textContent = "";
     if (!svg) el.classList.add("tick");
+    let nDigits = 0;
     [...final].forEach((ch, index) => {
-      const isDigit = /\d/.test(ch);
-      const len = 5 + 2 * digits.length;
-      const seq = isDigit && Array.from({ length: len }, (_, i) => (+ch - len + 1 + i + 100) % 10); // ends on the digit
+      const digit = /\d/.test(ch);
+      const len = 5 + 2 * nDigits;
+      const seq = digit ? Array.from({ length: len }, (_, i) => (+ch - len + 1 + i + 100) % 10) : [ch]; // ends on ch
+      const c = { seq, index, digit, order: digit ? nDigits++ : 0 };
       if (svg) {
-        const t = svgEl("tspan", isDigit ? { "fill-opacity": 0 } : {}, el);
-        t.textContent = ch;
-        if (isDigit) digits.push({ seq, index });
-      } else if (isDigit) {
+        svgEl("tspan", { "fill-opacity": 0 }, el).textContent = ch;
+      } else {
         const d = document.createElement("span");
         d.className = "digit";
         d.innerHTML = `<span class="ghost">${ch}</span><span class="reel">${seq.map((v) => `<span>${v}</span>`).join("")}</span>`;
         el.append(d);
-        digits.push({ seq, reel: d.lastChild });
-        gsap.set(d.lastChild, { yPercent: 100 / seq.length });
-      } else el.append(ch);
+        c.reel = d.lastChild;
+        gsap.set(c.reel, { yPercent: 100 / seq.length });
+      }
+      chars.push(c);
     });
-    const buildSvgReel = (d) => {
-      const box = el.getExtentOfChar(d.index);
+    const buildSvgReel = (c) => {
+      const box = el.getExtentOfChar(c.index);
       const id = `tick${tickId++}`;
       const clip = svgEl("clipPath", { id }, el.ownerSVGElement);
       svgEl("rect", { x: box.x - box.width, y: box.y, width: box.width * 3, height: box.height }, clip); // only the height clips
       const g = svgEl("g", { "clip-path": `url(#${id})` });
       el.after(g);
-      d.reel = svgEl("g", {}, g);
-      d.pitch = box.height;
-      d.seq.forEach((v, k) => {
+      c.reel = svgEl("g", {}, g);
+      c.pitch = box.height;
+      c.seq.forEach((v, k) => {
         const attrs = { x: box.x + box.width / 2, y: Number(el.getAttribute("y")) + k * box.height, "text-anchor": "middle" };
         for (const a of ["class", "font-size", "font-weight", "fill"]) if (el.hasAttribute(a)) attrs[a] = el.getAttribute(a);
-        svgEl("text", attrs, d.reel).textContent = v;
+        svgEl("text", attrs, c.reel).textContent = v;
       });
     };
-    return (duration) => digits.forEach((d, i) => {
-      const n = d.seq.length, vars = { duration, ease: "power3.inOut", delay: i * 0.08 };
+    return (duration) => chars.forEach((c) => {
+      const n = c.seq.length;
+      const vars = c.digit
+        ? { duration, ease: "power3.inOut", delay: c.order * 0.08 }
+        : { duration: 0.55, ease: "power3.out", delay: (nDigits - 1) * 0.08 + duration * 0.7 };
       if (svg) {
-        if (!d.reel) buildSvgReel(d);
-        gsap.fromTo(d.reel, { y: d.pitch }, { y: -(n - 1) * d.pitch, ...vars });
-      } else gsap.fromTo(d.reel, { yPercent: 100 / n }, { yPercent: -100 * (n - 1) / n, ...vars });
+        if (!c.reel) buildSvgReel(c);
+        gsap.fromTo(c.reel, { y: c.pitch }, { y: -(n - 1) * c.pitch, ...vars });
+      } else gsap.fromTo(c.reel, { yPercent: 100 / n }, { yPercent: -100 * (n - 1) / n, ...vars });
     });
   };
   const ticker = (el, { duration = 1.4 } = {}) => {
     const play = (el._ticker ||= prepTicker(el));
     return gsap.timeline().call(() => play(duration));
+  };
+  // Plain count-up from 0, for the hero's rates chart
+  const countUp = (el, opts = {}) => {
+    const o = { v: 0 }, dec = String(el.dataset.count).includes(".") ? 1 : 0;
+    const show = (v) => (el.textContent = (dec ? v.toFixed(dec) : Math.round(v)) + (el.dataset.suffix || ""));
+    show(0);
+    return gsap.to(o, { v: parseFloat(el.dataset.count), duration: 1.4, ease: "power2.out", ...opts, onUpdate: () => show(o.v) });
   };
   // Paused timeline that plays the first time its trigger scrolls into view.
   // The trigger only calls play(), so ScrollTrigger refreshes never rewind it.
@@ -365,7 +377,7 @@ if (!window.gsap || !window.ScrollTrigger || !window.SplitText || reduceMotion) 
       .from(rates.querySelectorAll(".max"), { opacity: 0, stagger: 0.08, duration: 0.4 }, 0.7);
     rates.querySelectorAll(".rate").forEach((g, i) => {
       ratesTl.from(g.querySelector(".fill"), { attr: { width: 0 }, duration: 1.2 }, 0.75 + i * 0.12)
-        .add(ticker(g.querySelector("[data-count]"), { duration: 1.2 }), 0.75 + i * 0.12);
+        .add(countUp(g.querySelector("[data-count]"), { duration: 1.2 }), 0.75 + i * 0.12);
     });
 
     // #1 · 77% area vs 9% bar
