@@ -99,8 +99,11 @@ drag.addEventListener("pointerdown", (e) => {
   drag.addEventListener("pointermove", move);
   drag.addEventListener("pointerup", () => drag.removeEventListener("pointermove", move), { once: true });
 });
+// Mobile toolbars fire height-only resizes while the page scrolls; only a width change re-centres
+let lastWidth = 0;
 const centreTriangles = () => {
-  if (!scroller.clientWidth) return;
+  if (!scroller.clientWidth || innerWidth === lastWidth) return;
+  lastWidth = innerWidth;
   scroller.scrollLeft = (207 / 753) * scroller.scrollWidth; // the design's starting window
   syncHandle();
 };
@@ -135,13 +138,13 @@ if (!window.gsap || !window.ScrollTrigger || !window.SplitText || reduceMotion) 
     // An insight's 20vh hold counts as one resting zone. Inside the run of slides it always settles,
     // leaning toward the scroll direction; at the run's edges (hero, CTA) only when already close.
     const desktopMq = window.matchMedia("(min-width: 960px)");
-    let snapTimer, snapping = false;
+    let snapTimer;
     const zones = () => [...document.querySelectorAll(".slide, .insight")].map((el) => {
       const top = el.getBoundingClientRect().top + lenis.scroll;
       return [top, top + Math.max(0, el.offsetHeight - innerHeight)];
     });
     const snap = () => {
-      if (snapping || !desktopMq.matches) return;
+      if (!desktopMq.matches) return;
       const y = lenis.scroll, vh = innerHeight;
       const zs = zones();
       if (zs.some(([a, b]) => y >= a - 1 && y <= b + 1)) return;
@@ -155,9 +158,8 @@ if (!window.gsap || !window.ScrollTrigger || !window.SplitText || reduceMotion) 
         if (!near.length) return;
         to = near.sort((a, b) => Math.abs(a - y) - Math.abs(b - y))[0];
       }
-      snapping = true;
-      lenis.scrollTo(to, { duration: 0.9, easing: (t) => 1 - Math.pow(1 - t, 3), onComplete: () => (snapping = false) });
-      setTimeout(() => (snapping = false), 1100); // in case the user interrupts it
+      // A running snap scrolls every frame, so the idle timer below can't start another mid-snap
+      lenis.scrollTo(to, { duration: 0.9, easing: (t) => 1 - Math.pow(1 - t, 3) });
     };
     lenis.on("scroll", () => {
       clearTimeout(snapTimer);
