@@ -365,11 +365,13 @@ if (!window.gsap || !window.ScrollTrigger || !window.SplitText || reduceMotion) 
       });
     }
 
-    // Notes and legends. On a desktop slide they sit near its bottom edge, where their own "top 88%" may never be
-    // reached while the slide is in view (short screens), so they play once their slide is half in view instead.
+    // Notes and legends. On a slide they can sit near its bottom edge, where their own "top 88%" may never be
+    // reached while the slide fills the screen. On desktop they play once their slide is half in view instead;
+    // on mobile, at their own position or once the slide has nearly scrolled into place, whichever comes first.
     gsap.utils.toArray(".reveal").forEach((el) => {
-      const slide = desk && el.closest(".slide");
-      onView(slide || el, slide ? "top 50%" : "top 88%").from(el, { y: 50, opacity: 0, duration: 1.1 });
+      const slide = el.closest(".slide");
+      const tl = onView(desk && slide ? slide : el, desk && slide ? "top 50%" : "top 88%").from(el, { y: 50, opacity: 0, duration: 1.1 });
+      if (!desk && slide) ScrollTrigger.create({ trigger: slide, start: "top 15%", once: true, onEnter: () => tl.play() });
     });
 
     // Rates bars

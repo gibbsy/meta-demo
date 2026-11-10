@@ -1,12 +1,12 @@
-/* Fonts: the design uses GT Zirkon + Econ Sans (installed locally); Google fonts are fallbacks. */
-@font-face { font-family: "Zirkon"; font-weight: 400; src: local("GT Zirkon Book"), local("GTZirkon-Book"), local("GT-Zirkon-Book"); }
-@font-face { font-family: "Zirkon"; font-weight: 500; src: local("GT Zirkon Medium"), local("GTZirkon-Medium"), local("GT-Zirkon-Medium"); }
-@font-face { font-family: "Zirkon"; font-weight: 700; src: local("GT Zirkon Bold"), local("GTZirkon-Bold"), local("GT-Zirkon-Bold"); }
-@font-face { font-family: "Zirkon"; font-weight: 700; font-style: italic; src: local("GT Zirkon Bold Italic"), local("GTZirkon-BoldItalic"), local("GT-Zirkon-Bold-Italic"); }
-@font-face { font-family: "Econ"; font-weight: 300; src: local("Econ Sans Light"), local("EconSans-Lig"), local("EconSansLig"), local("Econ Sans Lig"); }
-@font-face { font-family: "Econ"; font-weight: 400; src: local("Econ Sans Regular"), local("EconSans-Reg"), local("EconSansReg"), local("Econ Sans Reg"), local("Econ Sans"); }
-@font-face { font-family: "Econ"; font-weight: 500; src: local("Econ Sans Medium"), local("EconSans-Med"), local("EconSansMed"), local("Econ Sans Med"); }
-@font-face { font-family: "Econ"; font-weight: 700; src: local("Econ Sans Bold"), local("EconSans-Bol"), local("EconSansBol"), local("Econ Sans Bol"); }
+/* Self-hosted so the demo renders on Netlify without the fonts installed locally. Google fonts stay as fallbacks. */
+@font-face { font-family: "Zirkon"; font-weight: 400; font-display: swap; src: url("fonts/GT-Zirkon-Book.woff2") format("woff2"); }
+@font-face { font-family: "Zirkon"; font-weight: 500; font-display: swap; src: url("fonts/GT-Zirkon-Medium.woff2") format("woff2"); }
+@font-face { font-family: "Zirkon"; font-weight: 700; font-display: swap; src: url("fonts/GT-Zirkon-Bold.woff2") format("woff2"); }
+@font-face { font-family: "Zirkon"; font-weight: 700; font-style: italic; font-display: swap; src: url("fonts/GT-Zirkon-Bold-Italic.woff2") format("woff2"); }
+@font-face { font-family: "Econ"; font-weight: 300; font-display: swap; src: url("fonts/EconSansLig.woff2") format("woff2"); }
+@font-face { font-family: "Econ"; font-weight: 400; font-display: swap; src: url("fonts/EconSansReg.woff2") format("woff2"); }
+@font-face { font-family: "Econ"; font-weight: 500; font-display: swap; src: url("fonts/EconSansMed.woff2") format("woff2"); }
+@font-face { font-family: "Econ"; font-weight: 700; font-display: swap; src: url("fonts/EconSansBol.woff2") format("woff2"); }
 
 :root {
   --ink: #222a37;
@@ -102,7 +102,7 @@ button { font: inherit; background: none; color: inherit; }
 
 /* ---------- S1 ---------- */
 .s1-title { line-height: .9; letter-spacing: -.04em; font-weight: 700; color: var(--ink); }
-.s1-amidst { line-height: .9; letter-spacing: -.04em; font-weight: 700; color: var(--red); white-space: nowrap; }
+.s1-amidst { line-height: .9; letter-spacing: -.04em; font-weight: 700; color: var(--red); }
 .s1-sub { font-weight: 500; line-height: 1.1; letter-spacing: -.04em; color: var(--teal); white-space: nowrap; }
 .s1-meta { display: flex; align-items: center; justify-content: flex-end; gap: calc(8 * var(--u)); }
 .s1-meta span { font-size: calc(13 * var(--u)); letter-spacing: .1em; text-transform: uppercase; line-height: 1; }
@@ -229,14 +229,33 @@ footer nav { display: flex; flex-wrap: wrap; gap: 8px 24px; max-width: 760px; }
   }
   .abs {
     left: calc(var(--ox) + var(--mx) * var(--u));
-    top: calc(var(--my) * var(--u));
+    top: calc(var(--oy) + var(--my) * var(--u));
     width: calc(var(--mw) * var(--u));
     height: calc(var(--mhh) * var(--u));
   }
-  .abs .abs { --ox: 0px; }
+  .abs .abs { --ox: 0px; --oy: 0px; }
   [style*="--fs"] { font-size: unset; }
   [style*="--mfs"] { font-size: calc(var(--mfs) * var(--u)); }
   .sec { height: calc(var(--mh) * var(--b)); }
+  /* Hero and intro take two screens together, as on desktop. The green lede stays under the map on the
+     first screen; the body paragraph and rates chart (design y ~742-1280, text cap to chart bottom) are centred in the second, but never
+     pushed past the section's bottom. lvh is the phone's full screen once its toolbars hide on scroll (svh,
+     with toolbars showing, is too short for the content on most phones). Short phones keep the design height. */
+  #s1 {
+    --s2: max(0px, min(calc(150lvh - 1075 * var(--b)), calc(200lvh - 1356 * var(--b))));
+    height: max(calc(200lvh - 64 * var(--b)), calc(var(--mh) * var(--b)));
+  }
+  #s1 .screen2 { --oy: var(--s2); }
+  #s1 .intro { --oy: 0px; }
+  .intro .body { margin-top: var(--s2); }
+  /* Key findings are one screen each: the 360 frame shrinks to the screen height when it runs short, as on desktop */
+  .slide { height: 100lvh; }
+  .slide * {
+    --b: min(calc(100cqw / 360), calc(100lvh / var(--mh)), 1.6px);
+    --oy: calc((100lvh - var(--mh) * var(--b)) / 4);
+  }
+  .slide .kf-head { top: calc(var(--oy) + 32 * var(--u)); }
+  .insight-pin { height: 100lvh; }
   .desk { display: none !important; }
   .mob { display: block !important; }
 
